@@ -3,12 +3,245 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Страница</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta
+      name="description"
+      content="NewsHub - актуальные новости технологий, политики и спорта"
+    />
+    <title>NewsHub - Главная</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <h1>Заголовок страницы</h1>
-    <p>Основной контент страницы</p>
-    <script src="script.js"></script>
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <!-- SKIP-LINK -->
+    <a href="#main" class="skip-link">Перейти к основному содержимому</a>
+
+    <!-- HEADER -->
+    <header
+      class="header"
+      itemprop="publisher"
+      itemscope
+      itemtype="https://schema.org/Organization"
+    >
+      <div class="container">
+        <a href="/" class="logo" itemprop="url">
+          <img
+            src="images/logo.png"
+            alt="Логотип NewsHub"
+            itemprop="logo"
+            width="120"
+            height="40"
+          />
+          <h1 itemprop="name">NewsHub</h1>
+        </a>
+        <nav class="nav" aria-label="Главное меню">
+          <ul class="nav__list">
+            <li class="nav__item"><a href="/" class="nav__link">Главная</a></li>
+            <li class="nav__item">
+              <a href="/tech" class="nav__link">Технологии</a>
+            </li>
+            <li class="nav__item">
+              <a href="/politics" class="nav__link">Политика</a>
+            </li>
+            <li class="nav__item">
+              <a href="/sports" class="nav__link">Спорт</a>
+            </li>
+          </ul>
+        </nav>
+        <form class="search" role="search" aria-label="Поиск новостей">
+          <label for="search-input" class="visually-hidden"
+            >Поиск новостей</label
+          >
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Поиск новостей..."
+            class="search__input"
+          />
+        </form>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main id="main" class="main" itemprop="mainContent">
+      <div class="container">
+        <!-- ГЛАВНАЯ НОВОСТЬ -->
+        <section class="hero" aria-labelledby="hero-heading">
+          <h2 id="hero-heading" class="visually-hidden">Главные новости</h2>
+          <article
+            class="hero__article article"
+            itemscope
+            itemtype="https://schema.org/NewsArticle"
+          >
+            <header class="hero__header article__header">
+              <h1 class="hero__title article__title" itemprop="headline">
+                Квантовый прорыв: Google представила первый коммерческий
+                квантовый компьютер Willow Core
+              </h1>
+              <div class="hero__meta article__meta">
+                <time
+                  datetime="2026-02-23T10:30:00+03:00"
+                  itemprop="datePublished"
+                  >23 февраля 2026</time
+                >
+                <span class="article__author">
+                  Автор:
+                  <span
+                    itemprop="author"
+                    itemscope
+                    itemtype="https://schema.org/Person"
+                  >
+                    <span itemprop="name">Иван Петров</span>
+                  </span>
+                </span>
+              </div>
+            </header>
+
+            <div class="hero__content article__content" itemprop="articleBody">
+              <p>
+                Google Quantum AI представила <strong>Willow Core</strong> —
+                105-кубитный квантовый процессор, который выполняет сложные
+                алгоритмы в <em>13 000 раз быстрее</em> суперкомпьютеров. Это
+                первое проверяемое квантовое преимущество.
+              </p>
+
+              <figure class="hero__figure article__image">
+                <img
+                  src="images/quantum-core.jpg"
+                  alt="Квантовый процессор Google Willow Core"
+                  itemprop="image"
+                  width="800"
+                  height="450"
+                  loading="lazy"
+                />
+                <figcaption>
+                  Willow Core: 105 кубитов с логической коррекцией ошибок
+                </figcaption>
+              </figure>
+
+              <h2>Технические характеристики</h2>
+              <p>
+                Точность операций: <strong>99.97% (однокубитные)</strong>,
+                <strong>99.88% (двухкубитные)</strong>. Willow Core содержит 1
+                трлн измерений — больше, чем все предыдущие квантовые компьютеры
+                вместе взятые.
+              </p>
+            </div>
+
+            <footer class="hero__footer article__footer">
+              <p>
+                Подготовлено главным технологическим корреспондентом NewsHub
+              </p>
+            </footer>
+          </article>
+        </section>
+
+        <!-- СЕТКА НОВОСТЕЙ -->
+        <section class="news-grid" aria-labelledby="news-heading">
+          <h2 id="news-heading">Последние новости</h2>
+          <div class="news-grid__list">
+            <article
+              class="news-grid__item article"
+              itemscope
+              itemtype="https://schema.org/NewsArticle"
+            >
+              <figure class="news-grid__figure article__image">
+                <img
+                  src="images/iphone-fold.jpg"
+                  alt="Концептуальное изображение складного iPhone от Apple"
+                  itemprop="image"
+                  width="400"
+                  height="225"
+                  loading="lazy"
+                />
+                <figcaption>Складной iPhone 2027</figcaption>
+              </figure>
+              <h3 class="article__title" itemprop="headline">
+                Apple выпустит складной iPhone в 2027 году
+              </h3>
+              <div class="article__meta">
+                <span
+                  itemprop="author"
+                  itemscope
+                  itemtype="https://schema.org/Person"
+                >
+                  Автор: <span itemprop="name">Мария Сидорова</span>
+                </span>
+                <time
+                  itemprop="datePublished"
+                  datetime="2026-02-23T09:15:00+03:00"
+                  >23 февраля 2026</time
+                >
+              </div>
+              <p itemprop="articleBody">
+                Apple подтвердила разработку складного iPhone...
+              </p>
+            </article>
+
+            <article
+              class="news-grid__item article"
+              itemscope
+              itemtype="https://schema.org/NewsArticle"
+            >
+              <figure class="news-grid__figure article__image">
+                <img
+                  src="images/sanctions.jpg"
+                  alt="График санкций ЕС против IT-компаний"
+                  itemprop="image"
+                  width="400"
+                  height="225"
+                  loading="lazy"
+                />
+                <figcaption>Новые санкции ЕС</figcaption>
+              </figure>
+              <h3 class="article__title" itemprop="headline">
+                Новые санкции против российских IT-компаний
+              </h3>
+              <div class="article__meta">
+                <span
+                  itemprop="author"
+                  itemscope
+                  itemtype="https://schema.org/Person"
+                >
+                  Автор: <span itemprop="name">Алексей Иванов</span>
+                </span>
+                <time
+                  itemprop="datePublished"
+                  datetime="2026-02-23T08:45:00+03:00"
+                  >23 февраля 2026</time
+                >
+              </div>
+              <p itemprop="articleBody">
+                ЕС расширил санкционный список российских IT-компаний...
+              </p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <section class="sidebar__section" aria-labelledby="popular-heading">
+        <h3 id="popular-heading">Популярное</h3>
+        <ol class="sidebar__list">
+          <li><a href="#" class="sidebar__link">Квантовый прорыв Google</a></li>
+          <li><a href="#" class="sidebar__link">Складной iPhone 2027</a></li>
+          <li><a href="#" class="sidebar__link">Новые санкции ЕС</a></li>
+        </ol>
+      </section>
+    </aside>
+
+    <!-- FOOTER -->
+    <footer
+      class="footer"
+      itemprop="publisher"
+      itemscope
+      itemtype="https://schema.org/Organization"
+    >
+      <div class="container">
+        <p><span itemprop="name">NewsHub</span> © 2026. Все права защищены.</p>
+      </div>
+    </footer>
+
+    <script src="js/script.js"></script>
   </body>
 </html>
