@@ -9,6 +9,10 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  // Figma-to-Code Sync настройки
+  "figmaToCode.token": "",
+  "figmaToCode.figmaFileId": "OXLthm6B2N86VlSYobhSjP",
+  "figmaToCode.watch": true,
+  "figmaToCode.output": "src/generated/"
 }
-
