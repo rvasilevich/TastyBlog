@@ -8,11 +8,12 @@
       content="NewsHub - актуальные новости технологий, политики и спорта"
     />
     <title>NewsHub - Главная</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
     <!-- SKIP-LINK -->
     <a href="#main" class="skip-link">Перейти к основному содержимому</a>
+
     <!-- HEADER -->
     <header
       class="header"
@@ -21,7 +22,7 @@
       itemtype="https://schema.org/Organization"
     >
       <div class="container">
-        <a href="/" class="logo" itemprop="url">
+        <a href="/" class="header__logo" itemprop="url">
           <img
             src="images/logo.png"
             alt="Логотип NewsHub"
@@ -31,21 +32,23 @@
           />
           <h1 itemprop="name">NewsHub</h1>
         </a>
-        <nav class="nav" aria-label="Главное меню">
-          <ul class="nav__list">
-            <li class="nav__item"><a href="/" class="nav__link">Главная</a></li>
-            <li class="nav__item">
-              <a href="/tech" class="nav__link">Технологии</a>
+        <nav class="header__nav" aria-label="Главное меню">
+          <ul class="header__nav-list">
+            <li class="header__nav-item">
+              <a href="/" class="header__nav-link">Главная</a>
             </li>
-            <li class="nav__item">
-              <a href="/politics" class="nav__link">Политика</a>
+            <li class="header__nav-item">
+              <a href="/tech" class="header__nav-link">Технологии</a>
             </li>
-            <li class="nav__item">
-              <a href="/sports" class="nav__link">Спорт</a>
+            <li class="header__nav-item">
+              <a href="/politics" class="header__nav-link">Политика</a>
+            </li>
+            <li class="header__nav-item">
+              <a href="/sports" class="header__nav-link">Спорт</a>
             </li>
           </ul>
         </nav>
-        <form class="search" role="search" aria-label="Поиск новостей">
+        <form class="header__search" role="search" aria-label="Поиск новостей">
           <label for="search-input" class="visually-hidden"
             >Поиск новостей</label
           >
@@ -53,7 +56,7 @@
             id="search-input"
             type="search"
             placeholder="Поиск новостей..."
-            class="search__input"
+            class="header__search-input"
           />
         </form>
       </div>
@@ -137,6 +140,7 @@
         <section class="news-grid" aria-labelledby="news-heading">
           <h2 id="news-heading">Последние новости</h2>
           <div class="news-grid__list">
+            <!-- Новость 1 -->
             <article
               class="news-grid__item article"
               itemscope
@@ -175,6 +179,7 @@
               </p>
             </article>
 
+            <!-- Новость 2 - Image 1.jpg -->
             <article
               class="news-grid__item article"
               itemscope
@@ -182,17 +187,17 @@
             >
               <figure class="news-grid__figure article__image">
                 <img
-                  src="images/sanctions.jpg"
-                  alt="График санкций ЕС против IT-компаний"
+                  src="images/Image 1.jpg"
+                  alt="Иллюстрация к статье о новых технологиях"
                   itemprop="image"
                   width="400"
                   height="225"
                   loading="lazy"
                 />
-                <figcaption>Новые санкции ЕС</figcaption>
+                <figcaption>Новые технологии 2026</figcaption>
               </figure>
               <h3 class="article__title" itemprop="headline">
-                Новые санкции против российских IT-компаний
+                Революционные технологии 2026 года
               </h3>
               <div class="article__meta">
                 <span
@@ -200,16 +205,90 @@
                   itemscope
                   itemtype="https://schema.org/Person"
                 >
-                  Автор: <span itemprop="name">Алексей Иванов</span>
+                  Автор: <span itemprop="name">Анна Козлова</span>
                 </span>
                 <time
                   itemprop="datePublished"
-                  datetime="2026-02-23T08:45:00+03:00"
+                  datetime="2026-02-23T10:00:00+03:00"
+                  >23 февраля 2026</time
+                >
+              </div>
+              <p itemprop="articleBody">Обзор самых ожидаемых технологий...</p>
+            </article>
+
+            <!-- Новость 3 - Image 2.jpeg -->
+            <article
+              class="news-grid__item article"
+              itemscope
+              itemtype="https://schema.org/NewsArticle"
+            >
+              <figure class="news-grid__figure article__image">
+                <img
+                  src="images/Image 2.jpeg"
+                  alt="Иллюстрация к статье о бизнес-новостях"
+                  itemprop="image"
+                  width="400"
+                  height="225"
+                  loading="lazy"
+                />
+                <figcaption>Бизнес-тренды</figcaption>
+              </figure>
+              <h3 class="article__title" itemprop="headline">
+                Бизнес-тренды 2026: что ждет рынок
+              </h3>
+              <div class="article__meta">
+                <span
+                  itemprop="author"
+                  itemscope
+                  itemtype="https://schema.org/Person"
+                >
+                  Автор: <span itemprop="name">Дмитрий Смирнов</span>
+                </span>
+                <time
+                  itemprop="datePublished"
+                  datetime="2026-02-23T07:30:00+03:00"
+                  >23 февраля 2026</time
+                >
+              </div>
+              <p itemprop="articleBody">Анализ ключевых бизнес-трендов...</p>
+            </article>
+
+            <!-- Новость 4 - Image 3.jpeg -->
+            <article
+              class="news-grid__item article"
+              itemscope
+              itemtype="https://schema.org/NewsArticle"
+            >
+              <figure class="news-grid__figure article__image">
+                <img
+                  src="images/Image 3.jpeg"
+                  alt="Иллюстрация к статье о науке"
+                  itemprop="image"
+                  width="400"
+                  height="225"
+                  loading="lazy"
+                />
+                <figcaption>Научные открытия</figcaption>
+              </figure>
+              <h3 class="article__title" itemprop="headline">
+                Научные открытия февраля 2026
+              </h3>
+              <div class="article__meta">
+                <span
+                  itemprop="author"
+                  itemscope
+                  itemtype="https://schema.org/Person"
+                >
+                  Автор: <span itemprop="name">Елена Морозова</span>
+                </span>
+                <time
+                  itemprop="datePublished"
+                  datetime="2026-02-23T11:15:00+03:00"
                   >23 февраля 2026</time
                 >
               </div>
               <p itemprop="articleBody">
-                ЕС расширил санкционный список российских IT-компаний...
+                Самые важные научные открытия месяца...
               </p>
             </article>
           </div>
