@@ -1,0 +1,13 @@
+.footer {
+  background: var(--color-secondary);
+  color: var(--color-white);
+  text-align: center;
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+@media (max-width: 767px) {
+  .footer {
+    padding: var(--spacing-md);
+  }
+}
