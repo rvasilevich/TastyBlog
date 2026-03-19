@@ -16,7 +16,6 @@
   margin: 0 auto;
 }
 
-/* ЛОГО с синим акцентом */
 .header__logo {
   display: flex;
   align-items: center;
@@ -37,7 +36,6 @@
   font-weight: 700;
 }
 
-/* ✅ БУРГЕР - всегда виден до 1024px */
 .header__burger {
   display: flex !important;
   flex-direction: column;
@@ -71,7 +69,6 @@
   transform: rotate(-45deg) translate(7px, -7px);
 }
 
-/* ✅ МОБИЛЬНОЕ МЕНЮ - ГОЛУБОЙ ФОН */
 .header__mobile-nav {
   position: fixed;
   top: 0;
@@ -143,7 +140,6 @@
   box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
 }
 
-/* ✅ ДЕСКТОПНАЯ НАВИГАЦИЯ - ГОЛУБОЙ ФОН */
 .header__nav {
   display: none;
   background: linear-gradient(135deg, var(--color-primary), #4dabf7);
@@ -196,7 +192,6 @@
   box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
 }
 
-/* ПОИСК с синим акцентом */
 .header__search {
   display: none;
   margin-left: auto;
@@ -221,7 +216,6 @@
   transform: scale(1.02);
 }
 
-/* МЕДИА-ЗАПРОСЫ */
 @media (min-width: 768px) {
   .header__inner {
     flex-direction: row;
