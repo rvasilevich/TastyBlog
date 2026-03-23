@@ -8,6 +8,8 @@
       content="NewsHub - актуальные новости технологий, политики и спорта"
     />
     <title>NewsHub - Главная</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
     <!-- CSS файлы для Шага 5 -->
@@ -307,15 +309,20 @@
         <aside class="sidebar">
           <section class="sidebar__section" aria-labelledby="popular-heading">
             <h3 id="popular-heading">Популярное</h3>
-            <ol class="sidebar__list">
-              <li>
-                <a href="#" class="sidebar__link">Квантовый прорыв Google</a>
-              </li>
-              <li>
-                <a href="#" class="sidebar__link">Складной iPhone 2027</a>
-              </li>
-              <li><a href="#" class="sidebar__link">Новые санкции ЕС</a></li>
-            </ol>
+
+            <div class="sidebar__content">
+              <ol class="sidebar__list">
+                <li>
+                  <a href="#" class="sidebar__link">Квантовый прорыв Google</a>
+                </li>
+                <li>
+                  <a href="#" class="sidebar__link">Складной iPhone 2027</a>
+                </li>
+                <li>
+                  <a href="#" class="sidebar__link">Новые санкции ЕС</a>
+                </li>
+              </ol>
+            </div>
           </section>
         </aside>
       </div>
@@ -332,6 +339,29 @@
       </div>
     </footer>
 
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/components/modal.js"></script>
     <script src="js/script.js"></script>
+
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ НОВОСТЕЙ -->
+    <div class="modal-overlay" id="newsModalOverlay" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" tabindex="-1">
+        <button
+          class="modal__close"
+          aria-label="Закрыть модальное окно"
+          data-modal-close
+        >
+          &times;
+        </button>
+        <div class="modal__header">
+          <h2 class="modal__title" id="modalTitle"></h2>
+          <div class="modal__meta" id="modalMeta"></div>
+        </div>
+        <div class="modal__content" id="modalContent"></div>
+        <div class="modal__footer">
+          <button class="btn btn--primary" data-modal-close>Закрыть</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
