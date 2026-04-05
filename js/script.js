@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('✅ Заголовок изменен!');
   }
 
-  // 🖌️ МАНИПУЛЯЦИЯ КОНТЕНТОМ
+  //  МАНИПУЛЯЦИЯ КОНТЕНТОМ
   console.log('🖌️ === МАНИПУЛЯЦИЯ КОНТЕНТОМ ===');
   const logoH1 = document.querySelector('.header__logo h1');
   if (logoH1) {
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('✅ Атрибуты изображения изменены');
   }
 
-  // 🎨 КЛАССЫ И СТИЛИ
+  //  КЛАССЫ И СТИЛИ
   console.log('🎨 === РАБОТА С КЛАССАМИ И СТИЛЯМИ ===');
   const firstCard = document.querySelector('.news-grid__item');
   console.log('Первая карточка для стилизации:', firstCard);
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // 🖱️ ОБРАБОТКА СОБЫТИЙ - ЧАСТЬ 3
+  //  ОБРАБОТКА СОБЫТИЙ - ЧАСТЬ 3
   console.log('🖱️ === ОБРАБОТКА СОБЫТИЙ ===');
 
   // 1. КНОПКА (расширенная)
@@ -210,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('✅ Поиск добавлен');
   }
 
-  // 3. ФОРМА
   // 3. ФОРМА
   const sidebarContent = document.querySelector('.sidebar__content');
   if (sidebarContent && !document.querySelector('.contact-form')) {
@@ -314,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('✅ Клики по карточкам / удаление настроены');
   }
 
-  // ❤️ === ЛАЙКИ ДЛЯ НОВОСТЕЙ С LOCALSTORAGE ===
+  //  === ЛАЙКИ ДЛЯ НОВОСТЕЙ С LOCALSTORAGE ===
   console.log('❤️ === ЛАЙКИ ДЛЯ НОВОСТЕЙ ===');
 
   function initLikes() {
@@ -397,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ✅ ИНИЦИАЛИЗАЦИЯ ЛАЙКОВ при динамическом добавлении карточек
+  //  ИНИЦИАЛИЗАЦИЯ ЛАЙКОВ при динамическом добавлении карточек
   function initDynamicLikes() {
     const newsGrid = document.querySelector('.news-grid');
     if (!newsGrid) return;
@@ -430,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('✅ Лайки для динамических карточек настроены');
   }
 
-  // 🖼️ === МОДАЛЬНОЕ ОКНО ДЛЯ НОВОСТЕЙ ===
+  //  === МОДАЛЬНОЕ ОКНО ДЛЯ НОВОСТЕЙ ===
   function initModal() {
     const list = document.querySelector('.news-grid__list');
     const overlay = document.getElementById('newsModalOverlay');
