@@ -77,7 +77,13 @@
           </ul>
         </nav>
 
-        <form class="header__search" role="search" aria-label="Поиск новостей">
+        <!-- Форма поиска в header -->
+        <div
+          class="header__search"
+          role="search"
+          aria-label="Поиск новостей"
+          id="headerSearch"
+        >
           <label for="search-input" class="visually-hidden"
             >Поиск новостей</label
           >
@@ -87,7 +93,8 @@
             placeholder="Поиск новостей..."
             class="header__search-input"
           />
-        </form>
+          <button id="search-button">Поиск</button>
+        </div>
       </div>
     </header>
 
@@ -111,8 +118,9 @@
                   <time
                     datetime="2026-02-23T10:30:00+03:00"
                     itemprop="datePublished"
-                    >23 февраля 2026</time
                   >
+                    23 февраля 2026
+                  </time>
                   <span class="article__author">
                     Автор:
                     <span
@@ -339,10 +347,6 @@
       </div>
     </footer>
 
-    <script src="js/utils/helpers.js"></script>
-    <script src="js/components/modal.js"></script>
-    <script src="js/script.js"></script>
-
     <!-- МОДАЛЬНОЕ ОКНО ДЛЯ НОВОСТЕЙ -->
     <div class="modal-overlay" id="newsModalOverlay" aria-hidden="true">
       <div class="modal" role="dialog" aria-modal="true" tabindex="-1">
@@ -363,5 +367,18 @@
         </div>
       </div>
     </div>
+
+    <div id="data-container"></div>
+    <div id="loading-indicator" style="display: none">Загрузка...</div>
+    <button id="refresh-btn">Обновить</button>
+    <button id="clear-cache-btn">Очистить кэш</button>
+
+    <!-- Скрипты -->
+    <script src="js/storage/localStorage.js"></script>
+    <script src="js/api/apiService.js"></script>
+    <script src="js/utils/dataParser.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>

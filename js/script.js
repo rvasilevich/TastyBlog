@@ -511,7 +511,423 @@ document.addEventListener('DOMContentLoaded', function () {
   initLikes();
   initDynamicLikes();
   initModal();
+
+  //начало 6
+  // Подключаем NewsAPI-новости к модальному окну
+  function connectNewsApiModal() {
+    const dataContainer = document.getElementById('data-container');
+    const overlay = document.getElementById('newsModalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalContent = document.getElementById('modalContent');
+    const closeBtns = document.querySelectorAll('[data-modal-close]');
+
+    if (!dataContainer || !overlay) {
+      return;
+    }
+
+    function showModal(card) {
+      const title =
+        card.querySelector('.article__title')?.textContent.trim() ||
+        'Без заголовка';
+
+      modalTitle.textContent = title;
+      modalMeta.innerHTML = '';
+      modalContent.innerHTML = '';
+
+      // Если есть .article__meta — клонируем
+      const meta = card.querySelector('.article__meta');
+      if (meta) {
+        const clonedMeta = meta.cloneNode(true);
+        modalMeta.appendChild(clonedMeta);
+      }
+
+      // Если есть .article__content — клонируем
+      const content =
+        card.querySelector('.article__content') || card.querySelector('p');
+      if (content) {
+        const clonedContent = content.cloneNode(true);
+        modalContent.appendChild(clonedContent);
+      }
+    }
+
+    function hideModal() {
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    dataContainer.addEventListener('click', function (event) {
+      const likeBtn = event.target.closest('.like-btn');
+      const card = event.target.closest('.news-grid__item');
+
+      if (likeBtn) {
+        // клик по лайку — не открываем модальное окно
+        return;
+      }
+
+      if (!card) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      card.classList.add('card--clicked');
+      setTimeout(() => card.classList.remove('card--clicked'), 300);
+      showModal(card);
+    });
+
+    closeBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        hideModal();
+      });
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) hideModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('show')) {
+        hideModal();
+      }
+    });
+  }
+
+  // Инициализация модального окна для NewsAPI-новостей
+  connectNewsApiModal();
+
+  //конец 6
+
   console.log('❤️ === ЛАЙКИ ГОТОВЫ! ===');
 
   console.log('🎉 === ЛАБОРАТОРНАЯ 5 + СОБЫТИЯ ЗАВЕРШЕНА ===');
+});
+
+// SSSSSSSSJDSKDSKDSJKSJDSKJSDKDSJKSDJSDKJSKDJSKDJDSKJSKDJKDSKDSJD
+
+function createDataElement(item) {
+  const template = `
+    <div class="data-item card">
+        <h3 class="data-item_title">{{title}}</h3>
+        <p class="data-item_description">{{description}}</p>
+        <div class="data-item_meta">
+            <span class="data-item_date">{{formattedDate}}</span>
+            <span class="data-item_author">{{author}}</span>
+            <button class="btn btn-secondary" data-id="{{id}}">
+                Сохранить
+            </button>
+        </div>
+    </div>
+  `;
+
+  const templateData = {
+    ...item,
+    formattedDate: formatDate(item.publishedAt || item.date),
+    description: truncateText(item.description, 150),
+  };
+
+  const element = createElementFromData(templateData, template);
+
+  const saveButton = element.querySelector('button');
+  saveButton.addEventListener('click', () => {
+    console.log('Сохранить новость:', item);
+  });
+
+  return element;
+}
+
+function filterAndSortData(data, filters, sortBy) {
+  let filteredData = filterData(data, filters);
+
+  if (sortBy) {
+    filteredData = sortData(filteredData, sortBy.key, sortBy.direction);
+  }
+
+  return filteredData;
+}
+
+//ALKDJLAKSDLAKDJKALD ALSDLAKDJLAKSDJ LAKSDLAKSDMLAMDS
+
+console.log('1. Скрипт загружен, DOM:', document.readyState);
+if (document.querySelector('.header__search')) {
+  console.log('2. Форма найдена:', document.querySelector('.header__search'));
+}
+
+class APIIntegrationManager {
+  constructor() {
+    this.localStorage = new LocalStorageService();
+    this.api = null;
+    this.currentNews = null;
+    this.searchInput = null; // ← добавь переменную, если хочешь
+    this.searchForm = null;
+  }
+
+  async init() {
+    console.log('3. init called');
+
+    await this.initializeAPI();
+    this.setupEventListeners();
+    this.loadCachedNews();
+    this.setupSecurityMeasures();
+  }
+
+  async initializeAPI() {
+    const apiConfig = {
+      url: 'https://newsapi.org/v2',
+      apikey: '04cdf23502bc4e15bb236ca3dfe35ab8',
+    };
+
+    this.api = new ApiService(apiConfig.url, apiConfig.apikey);
+  }
+
+  setupEventListeners() {
+    console.log('setupEventListeners this:', this);
+
+    const searchButton = document.getElementById('search-button');
+    console.log('searchButton:', searchButton); // ← видит ли кнопку?
+
+    if (searchButton) {
+      searchButton.addEventListener('click', (e) => {
+        console.log('Кнопка поиска НАЖАТА', this);
+        e.preventDefault();
+        this.handleSearch();
+      });
+    }
+
+    const searchInput = document.getElementById('search-input');
+    console.log('searchInput:', searchInput); // ← видит ли поле ввода?
+
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          console.log('Enter в поле поиска', this);
+          e.preventDefault();
+          this.handleSearch();
+        }
+      });
+    }
+
+    // refresh / clear-cache
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        console.log('refresh-btn click', this);
+        this.refreshNews();
+      });
+    }
+
+    const clearCacheBtn = document.getElementById('clear-cache-btn');
+    if (clearCacheBtn) {
+      clearCacheBtn.addEventListener('click', () => {
+        console.log('clear-cache-btn click', this);
+        this.clearCache();
+      });
+    }
+  }
+
+  async handleSearch() {
+    console.log('handleSearch this:', this);
+
+    const searchInput = document.getElementById('search-input');
+    const query = searchInput.value.trim();
+
+    if (!query) {
+      this.showError('Введите поисковый запрос');
+      return;
+    }
+
+    await this.fetchNews({ q: query });
+  }
+
+  async fetchNews(params = {}) {
+    this.showLoading(true);
+
+    const cacheKey = `news_headlines_${JSON.stringify(params)}`;
+    const cachedNews = this.localStorage.get(cacheKey, null, 3600000);
+
+    if (cachedNews) {
+      this.currentNews = cachedNews;
+      this.renderNews(cachedNews);
+      this.showNotification('Новости загружены из кэша');
+      return;
+    }
+
+    try {
+      const data = await this.api.get('/top-headlines', params);
+      const articles = data.articles || [];
+
+      this.currentNews = articles;
+      this.localStorage.set(cacheKey, articles);
+      this.localStorage.set('last_news_articles', articles);
+      this.localStorage.set('last_news_call', new Date().toISOString());
+
+      this.renderNews(articles);
+      this.showNotification('Новости успешно загружены');
+    } catch (error) {
+      this.handleAPIError(error);
+    } finally {
+      this.showLoading(false);
+    }
+  }
+
+  loadCachedNews() {
+    const lastArticles = this.localStorage.get('last_news_articles');
+    if (lastArticles) {
+      this.currentNews = lastArticles;
+      this.renderNews(lastArticles);
+      this.showNotification('Показаны последние сохранённые новости (оффлайн)');
+    }
+  }
+
+  handleAPIError(error) {
+    console.error('API Error:', error);
+
+    let errorMessage = 'Произошла ошибка при загрузке новостей';
+
+    if (error.message.includes('404')) {
+      errorMessage = 'Запрашиваемые новости не найдены';
+    } else if (error.message.includes('429')) {
+      errorMessage = 'Превышен лимит запросов. Попробуйте позже';
+    } else if (error.message.includes('401')) {
+      errorMessage = 'Ошибка авторизации. Проверьте API ключ';
+    } else if (!navigator.onLine) {
+      errorMessage = 'Отсутствует подключение к интернету';
+    }
+
+    this.showError(errorMessage);
+  }
+
+  renderNews(newsList) {
+    const container = document.getElementById('data-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!newsList || !newsList.length) {
+      container.innerHTML = '<p class="no-data">Новостей не найдено</p>';
+      return;
+    }
+
+    newsList.forEach((article) => {
+      const element = this.createNewsCard(article);
+      container.appendChild(element);
+    });
+  }
+
+  createNewsCard(article) {
+    const container = document.createElement('article');
+    container.className = 'news-grid__item article';
+    container.setAttribute('itemscope', '');
+    container.setAttribute('itemtype', 'https://schema.org/NewsArticle');
+
+    if (article.id) {
+      container.setAttribute('data-news-id', article.id);
+    }
+
+    const sourceName = article.source?.name || 'Без источника';
+    const publishedAt = article.publishedAt
+      ? formatDate(article.publishedAt)
+      : 'Нет даты';
+
+    container.innerHTML = `
+    <figure class="news-grid__figure article__image">
+      <img
+        src="${article.urlToImage || 'images/placeholder.jpg'}"
+        alt="${article.title || 'Нет заголовка'}"
+        itemtype="https://schema.org/ImageObject"
+        itemprop="image"
+        width="400"
+        height="225"
+        loading="lazy"
+      />
+    </figure>
+    <h3 class="article__title" itemprop="headline">${truncateText(
+      article.title || '',
+      70
+    )}</h3>
+    <div class="article__meta" itemprop="author" itemscope itemtype="https://schema.org/Person">
+      <span>Источник: <span itemprop="name">${sourceName}</span></span>
+      <time itemprop="datePublished">${publishedAt}</time>
+    </div>
+    <p itemprop="articleBody">${truncateText(
+      article.description || '',
+      120
+    )}</p>
+  `;
+
+    container.addEventListener('click', (e) => {
+      if (['A', 'BUTTON'].includes(e.target.tagName)) {
+        return;
+      }
+
+      console.log('Открыть новость в модальном окне:', article);
+      // Здесь можно вызвать openNewsModal(article);
+    });
+
+    return container;
+  }
+
+  async refreshNews() {
+    this.localStorage.clearExpired();
+    this.currentNews = null;
+    await this.fetchNews();
+  }
+
+  clearCache() {
+    const keys = this.localStorage.getAllKeys();
+    keys.forEach((key) => {
+      if (key !== 'app_settings' && key !== 'saved_items') {
+        this.localStorage.remove(key);
+      }
+    });
+    this.showNotification('Кэш очищен');
+  }
+
+  setupSecurityMeasures() {
+    this.localStorage.clearExpired();
+
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+      console.log('API Call:', args[0]);
+      return originalFetch.apply(window, args);
+    };
+  }
+
+  showLoading(show = true) {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) {
+      loader.style.display = show ? 'block' : 'none';
+    }
+  }
+
+  showError(message) {
+    this.showNotification(message, 'error');
+  }
+
+  showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 4px;
+      color: white;
+      z-index: 1000;
+      background: ${type === 'error' ? '#f44336' : '#4CAF50'};
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+}
+
+// Инициализация приложения
+document.addEventListener('DOMContentLoaded', () => {
+  new APIIntegrationManager();
 });
