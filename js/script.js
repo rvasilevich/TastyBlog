@@ -658,8 +658,11 @@ class APIIntegrationManager {
     this.localStorage = new LocalStorageService();
     this.api = null;
     this.currentNews = null;
-    this.searchInput = null; // ← добавь переменную, если хочешь
+    this.searchInput = null;
     this.searchForm = null;
+
+    // Initialize immediately
+    this.init();
   }
 
   async init() {
@@ -667,8 +670,29 @@ class APIIntegrationManager {
 
     await this.initializeAPI();
     this.setupEventListeners();
-    this.loadCachedNews();
     this.setupSecurityMeasures();
+
+    // Try to load from cache first, otherwise fetch fresh
+    const loaded = this.loadCachedNews();
+    if (!loaded) {
+      console.log('No cached news, fetching fresh top headlines...');
+      await this.fetchNews({ country: 'us', pageSize: 10 });
+    }
+  }
+
+  loadCachedNews() {
+    // Try to load cached top headlines
+    const cacheKey = 'news_headlines_{"country":"us","pageSize":10}';
+    const cachedNews = this.localStorage.get(cacheKey, null, 3600000);
+
+    if (cachedNews && cachedNews.length > 0) {
+      console.log('Loading news from cache...', cachedNews.length, 'articles');
+      this.currentNews = cachedNews;
+      this.renderNews(cachedNews);
+      return true;
+    }
+
+    return false;
   }
 
   async initializeAPI() {
@@ -683,22 +707,23 @@ class APIIntegrationManager {
   setupEventListeners() {
     console.log('setupEventListeners this:', this);
 
-    const searchButton = document.getElementById('search-button');
-    console.log('searchButton:', searchButton); // ← видит ли кнопку?
+    // Store reference to search input
+    this.searchInput = document.getElementById('search-input');
 
-    if (searchButton) {
-      searchButton.addEventListener('click', (e) => {
-        console.log('Кнопка поиска НАЖАТА', this);
+    // Делегируем click на #search-button
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+
+      if (target.id === 'search-button' || target.closest('#search-button')) {
+        console.log('Кнопка поиска НАЖАТА (через делегирование)', this);
         e.preventDefault();
         this.handleSearch();
-      });
-    }
+      }
+    });
 
-    const searchInput = document.getElementById('search-input');
-    console.log('searchInput:', searchInput); // ← видит ли поле ввода?
-
-    if (searchInput) {
-      searchInput.addEventListener('keydown', (e) => {
+    // Enter в поле ввода
+    if (this.searchInput) {
+      this.searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           console.log('Enter в поле поиска', this);
           e.preventDefault();
@@ -716,6 +741,7 @@ class APIIntegrationManager {
       });
     }
 
+    // ✅ clearCacheBtn — здесь
     const clearCacheBtn = document.getElementById('clear-cache-btn');
     if (clearCacheBtn) {
       clearCacheBtn.addEventListener('click', () => {
@@ -728,7 +754,15 @@ class APIIntegrationManager {
   async handleSearch() {
     console.log('handleSearch this:', this);
 
-    const searchInput = document.getElementById('search-input');
+    const searchInput =
+      this.searchInput || document.getElementById('search-input');
+
+    if (!searchInput) {
+      console.error('Search input not found');
+      this.showError('Поле поиска не найдено');
+      return;
+    }
+
     const query = searchInput.value.trim();
 
     if (!query) {
@@ -736,16 +770,27 @@ class APIIntegrationManager {
       return;
     }
 
+    console.log('Searching for:', query);
     await this.fetchNews({ q: query });
   }
 
   async fetchNews(params = {}) {
     this.showLoading(true);
 
-    const cacheKey = `news_headlines_${JSON.stringify(params)}`;
+    // Add default params if not provided
+    const fetchParams = {
+      language: 'en',
+      pageSize: 20,
+      ...params,
+    };
+
+    const cacheKey = `news_headlines_${JSON.stringify(fetchParams)}`;
+    console.log('Cache key:', cacheKey);
+
     const cachedNews = this.localStorage.get(cacheKey, null, 3600000);
 
     if (cachedNews) {
+      console.log('Using cached news:', cachedNews.length, 'articles');
       this.currentNews = cachedNews;
       this.renderNews(cachedNews);
       this.showNotification('Новости загружены из кэша');
@@ -753,29 +798,57 @@ class APIIntegrationManager {
     }
 
     try {
-      const data = await this.api.get('/top-headlines', params);
+      console.log('Fetching news with params:', fetchParams);
+      const data = await this.api.get('/top-headlines', fetchParams);
       const articles = data.articles || [];
+
+      // Show notification if using fallback/mock data
+      if (data.status === 'fallback') {
+        console.log(
+          '⚠️ Используем резервные данные (CORS ограничение NewsAPI)'
+        );
+      } else if (data.status === 'mock') {
+        console.log('🎨 Используем демонстрационные данные');
+        this.showNotification(
+          '🎨 Демонстрационный режим (CORS ограничение NewsAPI)',
+          'error'
+        );
+      }
+
+      if (!articles.length) {
+        this.showNotification('Новостей не найдено');
+        const container = document.getElementById('data-container');
+        if (container) {
+          container.innerHTML =
+            '<p class="no-data">Новостей не найдено. Попробуйте другой запрос.</p>';
+        }
+        this.showLoading(false);
+        return;
+      }
 
       this.currentNews = articles;
       this.localStorage.set(cacheKey, articles);
       this.localStorage.set('last_news_articles', articles);
       this.localStorage.set('last_news_call', new Date().toISOString());
 
+      console.log('Fetched', articles.length, 'articles');
       this.renderNews(articles);
-      this.showNotification('Новости успешно загружены');
+
+      if (data.status === 'fallback' || data.status === 'mock') {
+        this.showNotification(
+          `Загружено ${articles.length} статей (демо режим)`,
+          'error'
+        );
+      } else {
+        this.showNotification(
+          `Новости успешно загружены (${articles.length} статей)`
+        );
+      }
     } catch (error) {
+      console.error('Fetch error:', error);
       this.handleAPIError(error);
     } finally {
       this.showLoading(false);
-    }
-  }
-
-  loadCachedNews() {
-    const lastArticles = this.localStorage.get('last_news_articles');
-    if (lastArticles) {
-      this.currentNews = lastArticles;
-      this.renderNews(lastArticles);
-      this.showNotification('Показаны последние сохранённые новости (оффлайн)');
     }
   }
 
@@ -868,19 +941,41 @@ class APIIntegrationManager {
   }
 
   async refreshNews() {
+    console.log('Обновление новостей...');
+    this.showNotification('Обновление новостей...');
+
+    // Clear expired cache entries
     this.localStorage.clearExpired();
+
+    // Clear current news to force fresh fetch
     this.currentNews = null;
+
+    // Fetch with default params (top headlines)
     await this.fetchNews();
   }
 
   clearCache() {
     const keys = this.localStorage.getAllKeys();
+    let clearedCount = 0;
+
     keys.forEach((key) => {
-      if (key !== 'app_settings' && key !== 'saved_items') {
+      if (!['app_settings', 'saved_items'].includes(key)) {
         this.localStorage.remove(key);
+        clearedCount++;
       }
     });
-    this.showNotification('Кэш очищен');
+
+    // Clear the data container
+    const dataContainer = document.getElementById('data-container');
+    if (dataContainer) {
+      dataContainer.innerHTML = '';
+    }
+
+    // Clear current news
+    this.currentNews = null;
+
+    console.log(`Кэш очищен. Удалено ${clearedCount} записей`);
+    this.showNotification(`Кэш очищен (${clearedCount} записей)`);
   }
 
   setupSecurityMeasures() {
@@ -929,5 +1024,6 @@ class APIIntegrationManager {
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', () => {
-  new APIIntegrationManager();
+  console.log('🚀 Initializing APIIntegrationManager...');
+  window.apiManager = new APIIntegrationManager();
 });
