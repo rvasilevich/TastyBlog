@@ -1,0 +1,31 @@
+.newsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 24px 0;
+}
+
+.newsList__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+
+.newsList__emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.newsList__emptyTitle {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.newsList__emptyText {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
